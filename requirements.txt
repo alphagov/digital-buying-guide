@@ -39,7 +39,7 @@ typed-ast==1.4.1
 Unidecode==1.1.1
 urllib3==1.25.8
 urwid==2.1.0
-wagtail==2.8
+wagtail==2.8.1
 wagtailtrans==2.1
 waitress==1.4.3
 webencodings==0.5.1
