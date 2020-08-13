@@ -96,7 +96,8 @@ class GuidelinesSectionPage(TranslatablePage):
 
     def save(self,  *args, **kwards):
         try:
-            clear_guidelines_listing_cache(self.language.code)
+            listing = self.get_parent()
+            clear_guidelines_listing_cache(self.language.code, listing.id)
         except Exception:
             logging.error('Error deleting GuidelinesSectionPage cache')
             pass
@@ -188,7 +189,8 @@ class GuidancePage(TranslatablePage):
     def save(self, *args, **kwards):
         try:
             section = self.get_parent()
-            clear_guidelines_listing_cache(self.language.code)
+            listing = section.get_parent()
+            clear_guidelines_listing_cache(self.language.code, listing.id)
             clear_guidelines_section_cache(section.id)
         except Exception:
             logging.error('Error deleting GuidancePage cache')
@@ -200,8 +202,8 @@ def clear_guidelines_section_cache(section_id):
     section_key = make_template_fragment_key("guidelines_sections_children", [section_id])
     cache.delete(section_key)
 
-def clear_guidelines_listing_cache(language_code):
-    guidelines_key = make_template_fragment_key("guidelines_listing_descendant", [language_code])
+def clear_guidelines_listing_cache(language_code, listing_id):
+    guidelines_key = make_template_fragment_key("guidelines_listing_descendant", [listing_id])
     guidelines_footer_key = make_template_fragment_key("guidelines_footer", [language_code])
     cache.delete_many([guidelines_key, guidelines_footer_key])
 
@@ -209,9 +211,13 @@ def clear_guidelines_listing_cache(language_code):
 @receiver(pre_delete, sender=GuidancePage)
 def on_guidance_page_delete(sender, instance, **kwargs):
     """ On a guidance or section page delete, clear the cache for the section and listings pages"""
-    clear_guidelines_listing_cache(instance.language.code)
-
+    listing = instance.get_parent()
+            
     if sender.__name__ == 'GuidancePage':
         section = instance.get_parent()
+        listing = section.get_parent()
         if section.id:
             clear_guidelines_section_cache(section.id)
+
+    if listing.id:
+        clear_guidelines_listing_cache(instance.language.code, listing.id)
