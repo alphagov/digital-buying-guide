@@ -28,6 +28,10 @@
   {# Global stylesheets #}
   <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/application.css' %}">
 
+  {# Analytics #}
+  <meta name="site-ga-id" value="{{ analytics_id }} }}">
+  <script type="text/javascript" src="{% static 'javascripts/google-analytics.js' %}"></script>
+
   {% block meta_tags %}{% endblock %}
 </head>
 
