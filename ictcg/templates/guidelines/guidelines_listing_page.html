@@ -11,11 +11,12 @@
 
     <div class="govuk-grid-column-two-thirds">
       <section class="ictcg-margin-bottom-3">
-        <h1 id="main-title" tabindex="-1">{{ page.title }}</h1>
 
         {% for block in page.information_banners %}
           {% include_block block %}
         {% endfor %}
+
+        <h1 id="main-title" tabindex="-1">{{ page.title }}</h1>
 
         {{ page.introduction|richtext }}
       </section>
