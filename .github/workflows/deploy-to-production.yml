@@ -30,7 +30,7 @@ jobs:
           cf target -o ${CF_ORG} -s ${CF_SPACE}
 
       - name: Check commit deployed to staging
-        run: echo "::set-env name=STAGING_COMMIT_REF::$(cf ssh dbg-staging-app -c "cat app/commit_ref")"
+        run: echo "STAGING_COMMIT_REF=$(cf ssh dbg-staging-app -c "cat app/commit_ref")" >> $GITHUB_ENV
 
       - name: Compare staging commit with commit to be deployed (fail if this deployment is not on staging)
         if: ${{ github.sha != env.STAGING_COMMIT_REF }}
